@@ -31,6 +31,7 @@
 #include "../FluidDynamicsApplication/custom_processes/spalart_allmaras_turbulence_model.h"
 #include "../FluidDynamicsApplication/custom_processes/stokes_initialization_process.h"
 #include "linear_solvers/linear_solver.h"
+#include "custom_processes/trilinos_bfs_process.h"
 
 namespace Kratos
 {
@@ -108,6 +109,10 @@ void AddProcesses(pybind11::module& m)
         .def(init<Epetra_MpiComm&, Variable<double>&, ModelPart&, TrilinosLinearSolverType::Pointer, const double>())
         .def(init<Epetra_MpiComm&, Variable<double>&, ModelPart&, TrilinosLinearSolverType::Pointer, const double, const double>())
         .def(init<Epetra_MpiComm&, Variable<double>&, ModelPart&, TrilinosLinearSolverType::Pointer, const double, const double, const unsigned int>())
+        ;
+
+    class_<TrilinosBfsProcess, TrilinosBfsProcess::Pointer, Process>(m, "TrilinosBfsProcess")
+        .def(init<ModelPart&>())
         ;
 
 }
