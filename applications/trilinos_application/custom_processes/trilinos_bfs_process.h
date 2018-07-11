@@ -78,7 +78,6 @@ public:
                     componentNodes.pop_front();
                     itCompNodePtr.lock()->FastGetSolutionStepValue(PARTITION_INDEX) = visitId++;
 
-
                     int isXTOKEN1 = itCompNodePtr.lock()->FastGetSolutionStepValue(STATIONARY);
                     if(isXTOKEN1 < 1) {
                         itCompNodePtr.lock()->FastGetSolutionStepValue(RIGID_BODY_ID) = clusterID;
