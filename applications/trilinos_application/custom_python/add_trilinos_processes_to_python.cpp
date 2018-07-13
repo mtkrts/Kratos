@@ -111,7 +111,8 @@ void AddProcesses(pybind11::module& m)
         .def(init<Epetra_MpiComm&, Variable<double>&, ModelPart&, TrilinosLinearSolverType::Pointer, const double, const double, const unsigned int>())
         ;
 
-    class_<TrilinosBfsProcess, TrilinosBfsProcess::Pointer, Process>(m, "TrilinosBfsProcess")
+    typedef TrilinosBfsProcess<Variable<double>> TrilinosBfsProcessType;
+    class_<TrilinosBfsProcessType, TrilinosBfsProcessType::Pointer, Process>(m, "TrilinosBfsProcess")
         .def(init<ModelPart&>())
         ;
 
