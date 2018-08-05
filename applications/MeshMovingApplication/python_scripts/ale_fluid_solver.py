@@ -64,6 +64,8 @@ class ALEFluidSolver(PythonSolver):
             info_msg = "Reactions are not being computed in the Fluid solver!"
             KratosMultiphysics.Logger.PrintInfo("::[ALEFluidSolver]::", info_msg)
 
+        # TODO check if the computation of the Mesh-Velocity scheme is consistent
+
         if self.is_printing_rank:
             KratosMultiphysics.Logger.PrintInfo("::[ALEFluidSolver]::", "Construction finished")
 

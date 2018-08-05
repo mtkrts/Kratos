@@ -61,10 +61,11 @@ class MeshSolverBase(PythonSolver):
                 "use_block_matrices_if_possible" : true,
                 "coarse_enough" : 5000
             },
-            "time_order" : 2,
             "reform_dofs_each_step"     : false,
             "compute_reactions"         : false,
-            "calculate_mesh_velocities" : true
+            "calculate_mesh_velocities" : true,
+            "time_scheme" : "bossak",
+            "time_order" : 2
         }""")
 
         self.settings.ValidateAndAssignDefaults(default_settings)
