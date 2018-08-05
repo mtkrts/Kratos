@@ -48,14 +48,14 @@ class MeshSolverBase(PythonSolver):
             },
             "mesh_motion_linear_solver_settings" : {
                 "solver_type" : "AMGCL",
-                "smoother_type":"ilu0",
+                "smoother_type":"spai0",
                 "krylov_type": "gmres",
                 "coarsening_type": "aggregation",
                 "max_iteration": 200,
                 "provide_coordinates": false,
                 "gmres_krylov_space_dimension": 100,
                 "verbosity" : 0,
-                "tolerance": 1e-7,
+                "tolerance": 1e-9,
                 "scaling": false,
                 "block_size": 1,
                 "use_block_matrices_if_possible" : true,
@@ -97,6 +97,7 @@ class MeshSolverBase(PythonSolver):
         self.mesh_model_part.AddNodalSolutionStepVariable(KratosMultiphysics.MESH_RHS)
         if (self.settings["calculate_mesh_velocities"].GetBool() == True):
             self.mesh_model_part.AddNodalSolutionStepVariable(KratosMultiphysics.MESH_VELOCITY)
+            self.mesh_model_part.AddNodalSolutionStepVariable(KratosMultiphysics.MESH_ACCELERATION)
         self.print_on_rank_zero("::[MeshSolverBase]:: Variables ADDED.")
 
     def AddDofs(self):
