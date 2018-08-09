@@ -173,6 +173,10 @@ public:
             KRATOS_THROW_ERROR(std::invalid_argument,
                     "ACCELERATION Key is 0. "
                     "Check if the application was correctly registered.","");
+        if (RELAXED_ACCELERATION.Key() == 0)
+            KRATOS_THROW_ERROR(std::invalid_argument,
+                    "RELAXED_ACCELERATION Key is 0. "
+                    "Check if the application was correctly registered.","");
         if (PRESSURE.Key() == 0)
             KRATOS_THROW_ERROR(std::invalid_argument,
                     "PRESSURE Key is 0. "
@@ -204,6 +208,10 @@ public:
             if (this->GetGeometry()[iNode].SolutionStepsDataHas(ACCELERATION) == false)
                 KRATOS_THROW_ERROR(std::invalid_argument,
                         "missing ACCELERATION variable on solution step data for node ",
+                        this->GetGeometry()[iNode].Id());
+            if (this->GetGeometry()[iNode].SolutionStepsDataHas(RELAXED_ACCELERATION) == false)
+                KRATOS_THROW_ERROR(std::invalid_argument,
+                        "missing RELAXED_ACCELERATION variable on solution step data for node ",
                         this->GetGeometry()[iNode].Id());
             if (this->GetGeometry()[iNode].SolutionStepsDataHas(PRESSURE) == false)
                 KRATOS_THROW_ERROR(std::invalid_argument,
@@ -325,7 +333,7 @@ public:
 					      ProcessInfo& rCurrentProcessInfo) override
     {
         this->CalculatePrimalGradientOfVMSSteadyTerm(rLeftHandSideMatrix,rCurrentProcessInfo);
-        this->AddPrimalGradientOfVMSMassTerm(rLeftHandSideMatrix,ACCELERATION,-1.0,rCurrentProcessInfo);
+        this->AddPrimalGradientOfVMSMassTerm(rLeftHandSideMatrix, RELAXED_ACCELERATION,-1.0,rCurrentProcessInfo);
         rLeftHandSideMatrix = trans(rLeftHandSideMatrix); // transpose
     }
 
@@ -386,7 +394,7 @@ public:
         if (rSensitivityVariable == SHAPE_SENSITIVITY)
         {
             this->CalculateShapeGradientOfVMSSteadyTerm(rOutput,rCurrentProcessInfo);
-            this->AddShapeGradientOfVMSMassTerm(rOutput,ACCELERATION,-1.0,rCurrentProcessInfo);
+            this->AddShapeGradientOfVMSMassTerm(rOutput, RELAXED_ACCELERATION,-1.0,rCurrentProcessInfo);
         }
         else
         {
