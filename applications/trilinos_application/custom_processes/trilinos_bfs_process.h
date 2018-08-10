@@ -53,14 +53,14 @@ public:
 
         Node<3>::WeakPointer originNodePtr = *(mrModelPart.NodesArray().begin());
 
-        std::list<Node<3>::WeakPointer> modelNodes;
-        std::list<Node<3>::WeakPointer> componentNodes;
+        std::list<Node<3>::WeakPointer> modelNodes;         // List of nodes in the queue
+        std::list<Node<3>::WeakPointer> componentNodes;     // List of nodes in the current set
 
         // Locate the elements for every node 
         auto findNeighbourProcesses = FindNodalNeighboursProcess(mrModelPart);
         findNeighbourProcesses.Execute();
 
-        // Push the first node to initilize the modelNodes
+        // Push the first node to the nodes queue
         modelNodes.push_back(originNodePtr);
 
         std::size_t clusterID = 1;
@@ -73,15 +73,14 @@ public:
         std::vector<double> cluster_info(100, 0);
         std::vector<int> cluster_size(100, 0);
 
-        // Use a fringerprint instead of a visited flag to avoid having to traverse the graph again to mark all nodes
-        // as not visited if the process is called again
+        // Use a traversing hash to avoid marking nodes every repetition
         int traverse_fingerptint = rand();
 
         while(!modelNodes.empty()) {
             auto & itModelNodePtr = modelNodes.front();
             modelNodes.pop_front();
             int fingerprint = itModelNodePtr.lock()->FastGetSolutionStepValue(FINGERPRINT);
-            if(fingerprint < 1) {
+            if(fingerprint != traverse_fingerptint) {
                 std::cout << "New non-empty component" << std::endl;
                 componentNodes.push_back(itModelNodePtr);
                 while(!componentNodes.empty()) {
@@ -91,7 +90,8 @@ public:
 
                     int currentDomainType = itCompNodePtr.lock()->FastGetSolutionStepValue(NODEDOMAIN);
 
-                    if(currentDomainType != 1) { // IsSolid?
+                    // IsSolid?
+                    if(currentDomainType != 1) {
                         nodeCluster = clusterID;
                         updateClusterID = true;
                     } else {
@@ -109,7 +109,7 @@ public:
                         if((*neigItr).lock()->FastGetSolutionStepValue(FINGERPRINT) != traverse_fingerptint) {
                             int neighbourDomainType = (*neigItr).lock()->FastGetSolutionStepValue(NODEDOMAIN);
 
-                            // It doesn't matter at which connected comp we are, just that is the same 
+                            // If the node is in another cluster add it to the model queue, otherwise add it to the set queue
                             if(currentDomainType != neighbourDomainType) {
                                 modelNodes.push_back((*neigItr));
                             } else {
